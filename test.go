@@ -62,7 +62,11 @@ func createdb(conn string, dbname string) error {
 	return nil
 
 }
+func init() {
 
+	conn := "root:00010001@tcp(127.0.0.1:3306)/mysql?charset=utf8"
+	createdb(conn, "lock")
+}
 func main() {
 	// Initialize database
 	orm.RegisterDriver("mysql", orm.DRMySQL)
@@ -71,7 +75,6 @@ func main() {
 
 	log.SetLevel(LogLevel("debug"))
 
-	createdb(conn, "lock")
 	o := orm.NewOrm()
 	if err := o.Using("default"); err != nil {
 		log.Errorf("err: %s", err)
