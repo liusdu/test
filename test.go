@@ -86,9 +86,6 @@ func main() {
 	if err != nil {
 		log.Errorf("dddd: %s", err)
 	}
-	_, err = lock.RUnlock()
-	if err != nil {
-		log.Errorf("err: %s", err)
-	}
+	lock.RUnlock()
 	//	lock.RUnlock()
 }
