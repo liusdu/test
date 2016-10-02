@@ -86,6 +86,23 @@ func main() {
 	if err != nil {
 		log.Errorf("dddd: %s", err)
 	}
-	lock.RUnlock()
+	var ok bool
+	lock.WUnlock()
+	if ok, err = lock.Rlock(); err != nil {
+		log.Errorf("Get Rlocker error: %s", err)
+	}
+	if ok {
+		log.Debugf("Get Rlock successfuly")
+	} else {
+		log.Debugf("Can not Get rlock")
+	}
+	//lock.RUnlock()
 	//	lock.RUnlock()
+	/*	if ok, err = lock.Wlock(); err != nil {
+			log.Errorf("Get Wlocker error: %s", err)
+		}
+		if ok {
+			log.Debugf("Get Wlock successfuly")
+		}
+	*/
 }
