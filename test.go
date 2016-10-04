@@ -82,7 +82,7 @@ func main() {
 	}
 	createTable("lock")
 	// Register driver
-	rwlock.InitDriver("mysql", time.Second)
+	rwlock.InitDriver("mysql", 10*time.Second)
 	/*
 
 		lock, err := rwlock.GetRwlocker("aaa")
@@ -121,13 +121,21 @@ func main() {
 	} else {
 		log.Debugf("Can not Get rlock")
 	}
+
+	go func(lock *rwlock.Rwlocker) {
+		var ok bool
+		var err error
+		if ok, err = lock1.Wlock(); err != nil {
+			log.Errorf("Get Rlocker error: %s", err)
+		}
+		if ok {
+			log.Debugf("Get Wlock successfuly")
+		} else {
+			log.Debugf("Can not Get Wlock")
+		}
+	}(lock1)
 	time.Sleep(3 * time.Second)
-	if ok, err = lock1.Wlock(); err != nil {
-		log.Errorf("Get Rlocker error: %s", err)
-	}
-	if ok {
-		log.Debugf("Get Wlock successfuly")
-	} else {
-		log.Debugf("Can not Get Wlock")
-	}
+	lock1.RUnlock()
+	/*
+	 */
 }
