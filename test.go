@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego/orm"
@@ -81,22 +82,23 @@ func main() {
 	}
 	createTable("lock")
 	// Register driver
-	rwlock.InitDriver("mysql")
+	rwlock.InitDriver("mysql", time.Second)
+	/*
 
-	lock, err := rwlock.GetRwlocker("aaa")
-	if err != nil {
-		log.Errorf("dddd: %s", err)
-	}
-	var ok bool
-	if ok, err = lock.Wlock(); err != nil {
-		log.Errorf("Get Rlocker error: %s", err)
-	}
-	if ok {
-		log.Debugf("Get Rlock successfuly")
-	} else {
-		log.Debugf("Can not Get rlock")
-	}
-
+		lock, err := rwlock.GetRwlocker("aaa")
+		if err != nil {
+			log.Errorf("dddd: %s", err)
+		}
+		var ok bool
+		if ok, err = lock.Wlock(); err != nil {
+			log.Errorf("Get Rlocker error: %s", err)
+		}
+		if ok {
+			log.Debugf("Get Rlock successfuly")
+		} else {
+			log.Debugf("Can not Get rlock")
+		}
+	*/
 	//lock.RUnlock()
 	//	if ok, err = lock.Rlock(); err != nil {
 	//		log.Errorf("Get Wlocker error: %s", err)
@@ -109,12 +111,23 @@ func main() {
 	if err1 != nil {
 		log.Errorf("dddd: %s", err1)
 	}
-	if ok, err = lock1.Wlock(); err != nil {
+	var err error
+	var ok bool
+	if ok, err = lock1.Rlock(); err != nil {
 		log.Errorf("Get Rlocker error: %s", err)
 	}
 	if ok {
 		log.Debugf("Get Rlock successfuly")
 	} else {
 		log.Debugf("Can not Get rlock")
+	}
+	time.Sleep(3 * time.Second)
+	if ok, err = lock1.Wlock(); err != nil {
+		log.Errorf("Get Rlocker error: %s", err)
+	}
+	if ok {
+		log.Debugf("Get Wlock successfuly")
+	} else {
+		log.Debugf("Can not Get Wlock")
 	}
 }
